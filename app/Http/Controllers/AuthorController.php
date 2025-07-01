@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RequestAuthorStore;
 use App\Models\Author;
-use Illuminate\Http\Request;
 
-class APIAuthorController extends Controller
+
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.

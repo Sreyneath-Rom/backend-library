@@ -1,18 +1,18 @@
 <?php
 
-use App\Http\Controllers\APIAuthorController;
+use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
 
 Route::prefix('authors')->group(function () {
-    // Custom search route
-    Route::get('/search', [APIAuthorController::class, 'search']);
-
-    // ✅ Correct resource declaration with custom name to avoid empty string
-    Route::resource('', APIAuthorController::class)->parameters(['' => 'author']);
+    Route::resource('', AuthorController::class)->parameters(['' => 'author']);
 });
 
+Route::prefix('books')->group(function(){
+    Route::resource('', BookController::class)->parameters([''=>'book']);
+});
 
 
 // Optional Auth Route (if auth is set up)
