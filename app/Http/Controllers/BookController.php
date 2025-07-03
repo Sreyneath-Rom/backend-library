@@ -5,20 +5,30 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RequestBookStore;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
     // GET /api/books
-    public function index()
+    public function index(Request $request)
     {
-        try{
-            $book =  BookResource::collection (Book::all());
-            if (!$book){
-                return response()->json([
-                    'message'=>'No book in the table'
-                ]);
+        try {
+            $searchValue = $request->get('search');
+            $query = Book::query();
+
+            if ($searchValue) {
+                $query->where('title', 'like', '%' . $searchValue . '%');
             }
-            return response()->json($book,200);
+
+            $books = $query->get();
+
+            if ($books->isEmpty()) {
+                return response()->json([
+                    'message' => 'No books found.'
+                ], 404);
+            }
+
+            return response()->json(BookResource::collection($books), 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'An error occurred while fetching books.',
