@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RequestBookStore;
+use App\Http\Resources\BookResource;
 use App\Models\Book;
 
 class BookController extends Controller
@@ -10,8 +11,20 @@ class BookController extends Controller
     // GET /api/books
     public function index()
     {
-        $book = Book::all();
-        return response()->json($book);
+        try{
+            $book =  BookResource::collection (Book::all());
+            if (!$book){
+                return response()->json([
+                    'message'=>'No book in the table'
+                ]);
+            }
+            return response()->json($book,200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while fetching books.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // POST /api/books
