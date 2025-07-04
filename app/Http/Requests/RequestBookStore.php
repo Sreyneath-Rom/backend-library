@@ -27,6 +27,7 @@ class RequestBookStore extends DefaultRequest
             'author_id' => 'required|exists:authors,id',
             'publish_date' => 'required|date',
             'description' => ['required', 'string', 'min:2', 'max:225'],
+            'category_ids' => ['array', 'exists:categories,id'],
         ];
     }
 }

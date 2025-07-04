@@ -42,11 +42,17 @@ class BookController extends Controller
     {
         $book = Book::create($request->validated());
 
+        // Attach categories (expects an array of category IDs from request)
+        if ($request->has('category_ids')) {
+            $book->categories()->attach($request->input('category_ids'));
+        }
+
         return response()->json([
             'message' => 'Successfully created book.',
-            'data' => $book,
+            'data' => $book->load('categories'),
         ], 201);
     }
+
 
     // GET /api/books/{book}
     public function show(string $id)
@@ -69,13 +75,24 @@ class BookController extends Controller
     {
         $book = Book::find($id);
 
+        if (!$book) {
+            return response()->json([
+                'message' => 'Book not found.'
+            ], 404);
+        }
+
         $book->update($request->validated());
+
+        if ($request->has('category_ids')) {
+            $book->categories()->sync($request->input('category_ids'));
+        }
 
         return response()->json([
             'message' => 'Book updated successfully.',
-            'data' => $book
+            'data' => $book->load('categories')
         ]);
     }
+
 
     // DELETE /api/books/{book}
     public function destroy(string $id)
