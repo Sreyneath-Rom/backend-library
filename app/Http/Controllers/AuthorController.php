@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RequestAuthorStore;
+use App\Http\Resources\AuthorResource;
+use Illuminate\Http\Request;
 use App\Models\Author;
 
 
@@ -11,15 +13,38 @@ class AuthorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $author = Author::all();
-        return response()->json($author);
+        try {
+            $searchValue = $request->get('search');
+            $query = Author::query();
+
+            if ($searchValue) {
+                $query->where('name', 'like', '%' . $searchValue . '%');
+            }
+
+            $author = $query->get();
+
+            if ($author->isEmpty()) {
+                return response()->json([
+                    'message' => 'No authors found.'
+                ], 404);
+            }
+
+            return response()->json(AuthorResource::collection($author), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while fetching author.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+       
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
+/**
+ * Store a newly created resource in storage.
+ */
     public function store(RequestAuthorStore $request)
     {
         $author = Author::create($request->validated());
