@@ -10,10 +10,16 @@ class Book extends Model
     use HasFactory;
     protected $fillable = [
         'title',
-        'author_id',
+        'author_id',       // keep if you want author relation
         'publish_date',
         'description',
+        'ISBN',
+        'image',
+        'publication_year',
+        'available_copies',
     ];
+    
+    
 
     public function author()
     {
