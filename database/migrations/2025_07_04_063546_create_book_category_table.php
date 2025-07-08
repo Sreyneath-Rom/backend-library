@@ -12,19 +12,21 @@ return new class extends Migration
     public function up()
     {
         Schema::create('book_category', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('book_id')
                 ->constrained('books')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
             $table->foreignId('category_id')
                 ->constrained('categories')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
             $table->timestamps();
+
+            $table->primary(['book_id', 'category_id']);
         });
     }
-
 
     /**
      * Reverse the migrations.

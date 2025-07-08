@@ -15,14 +15,10 @@ class AuthorResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-          
-
+            'id' => $this->id,  // It's good practice to include ID in resources
             'name' => $this->name,
             'birthday' => $this->birthday,
             'nationality' => $this->nationality,
-            
-            
-
         ];
     }
 }

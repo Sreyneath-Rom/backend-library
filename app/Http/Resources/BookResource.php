@@ -16,12 +16,10 @@ class BookResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            
-            'title'=>$this->title,
-            'author'=>$this->author->name,
-            'publish_date'=>$this->publish_date,
+            'title' => $this->title,
+            'author' => new AuthorResource($this->whenLoaded('author')),
+            'publish_date' => $this->publish_date,
             'categories' => $this->categories->pluck('name'),
-            
         ];
     }
 }

@@ -3,24 +3,20 @@
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
-
 use Illuminate\Http\Request;
 
-Route::prefix('authors')->group(function () {
-    Route::resource('', AuthorController::class)->parameters(['' => 'author']);
-});
+// Author routes
+Route::apiResource('authors', AuthorController::class);
 
-Route::prefix('books')->group(function(){
-    Route::resource('', BookController::class)->parameters([''=>'book']);
-});
+// Book routes
+Route::apiResource('books', BookController::class);
 
-
-// Optional Auth Route (if auth is set up)
-Route::middleware('auth')->get('/user', function (Request $request) {
+// Optional Auth route
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Fallback for 404 errors
+// Fallback route
 Route::fallback(function () {
     return response()->json([
         'message' => 'Not Found. Check your route or endpoint.'
